@@ -10,9 +10,9 @@ class GetDealsUseCase(
 ) : UseCase<GetDealsUseCase.Input, List<DealEntity>> {
   private val appDealsRepository by di.instance<DealRepository>()
 
-  class Input(val skip: Int, val take: Int)
+  class Input(val skip: Int, val take: Int, val filter: String? = null)
 
   override suspend fun doExecute(input: Input): List<DealEntity> {
-    return appDealsRepository.getAll(input.skip, input.take)
+    return appDealsRepository.getAll(input.skip, input.take, input.filter)
   }
 }

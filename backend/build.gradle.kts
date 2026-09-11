@@ -74,6 +74,9 @@ dependencies {
   implementation(libs.jobrunr.kotlin)
   implementation(libs.firebaseAdmin)
 
+  implementation(libs.graaljs)
+  implementation(libs.graaljs.scriptengine)
+
   testImplementation(libs.junit.jupiter)
   testImplementation(libs.kotest.assertions.core)
   testImplementation(libs.mockk)

@@ -18,7 +18,7 @@ fun appDealsApi(di: DirectDI, vertx: Vertx): Router = Router.router(vertx).apply
       ctx.executeUseCase(
         useCase = di.instance<GetDealsUseCase>(),
         toContext = { GetDealsContext(ctx.request().params()) },
-        toInput = { GetDealsUseCase.Input(it.skip, it.take) },
+        toInput = { GetDealsUseCase.Input(it.skip, it.take, it.filter) },
       ) {
         ctx.json(jsonResponse(data = it))
       }

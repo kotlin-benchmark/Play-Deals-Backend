@@ -9,6 +9,7 @@ class GetDealsContext(
 ) : Validated {
   val skip by lazy { param.get("skip")?.toIntOrNull() ?: 0 }
   val take by lazy { param.get("take")?.toIntOrNull() ?: 10 }
+  val filter by lazy { param.get("filter") }
 
   override suspend fun validate() {
     when {

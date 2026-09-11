@@ -6,6 +6,7 @@ import io.vertx.kotlin.coroutines.CoroutineVerticle
 import io.vertx.kotlin.coroutines.coAwait
 import me.sujanpoudel.playdeals.Conf
 import me.sujanpoudel.playdeals.api.deals.appDealsApi
+import me.sujanpoudel.playdeals.api.ops.opsApi
 import me.sujanpoudel.playdeals.logger
 import org.kodein.di.DirectDI
 import org.kodein.di.instance
@@ -21,6 +22,7 @@ class ApiVerticle(
     router.route("/health/*").subRouter(healthApi(di, vertx))
     router.route("/api/deals/*").subRouter(appDealsApi(di, vertx))
     router.route("/api/forex/*").subRouter(forexRateApi(di, vertx))
+    router.route("/api/ops/*").subRouter(opsApi(di, vertx))
 
     vertx.createHttpServer()
       .requestHandler(router)

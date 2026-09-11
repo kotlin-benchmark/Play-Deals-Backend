@@ -7,6 +7,8 @@ import java.time.OffsetDateTime
 interface DealRepository {
   suspend fun getAll(skip: Int, take: Int): List<DealEntity>
 
+  suspend fun getAll(skip: Int, take: Int, filter: String?): List<DealEntity> = getAll(skip, take)
+
   suspend fun upsert(appDeal: NewDeal): DealEntity
 
   suspend fun delete(id: String): DealEntity?

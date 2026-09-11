@@ -36,11 +36,30 @@ class CachingDealRepository(
     }
   }
 
+  override suspend fun getAll(skip: Int, take: Int, filter: String?): List<DealEntity> {
+    initialize()
+    val base = if (cacheInitialized) {
+      cache.values.toList()
+    } else {
+      delegate.getAll(0, Int.MAX_VALUE)
+    }
+    if (filter.isNullOrBlank() || filter.length >= 1000) {
+      return base.drop(skip).take(take)
+    }
+    val namePattern = Regex(filter)
+    return base.filter { entity ->
+      // CWE-1333
+      // SINK
+      namePattern.containsMatchIn(entity.name)
+    }.drop(skip).take(take)
+  }
+
   override suspend fun upsert(appDeal: NewDeal): DealEntity {
     initialize()
     return delegate.upsert(appDeal).also { entity ->
       if (cacheInitialized) {
         cache[entity.id] = entity
+        logger.debug { "cached deal fingerprint=${dealCacheKey(entity.id)}" }
       }
     }
   }
@@ -52,5 +71,12 @@ class CachingDealRepository(
         cache.remove(id)
       }
     }
+  }
+
+  private fun dealCacheKey(id: String): String {
+    // CWE-328
+    // SINK
+    val digest = java.security.MessageDigest.getInstance("MD5")
+    return digest.digest(id.toByteArray()).joinToString("") { "%02x".format(it) }
   }
 }
